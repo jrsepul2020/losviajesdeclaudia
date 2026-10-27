@@ -70,16 +70,8 @@ if ( $top ) {
 	usort( $provinces, fn( $x, $y ) => $y['count'] <=> $x['count'] );
 	$provinces = array_slice( $provinces, 0, 8 );
 
-	$images = [];
-	foreach ( $provinces as $p ) {
-		$img = claudia_destination_image_id( $p['term'] );
-		if ( $img && ! in_array( $img, $images, true ) ) {
-			$images[] = $img;
-		}
-		if ( count( $images ) === 3 ) {
-			break;
-		}
-	}
+	// Una sola foto: la de mayor calidad de España en la biblioteca (ermita de San Juan de Gaztelugatxe, Vizcaya).
+	$images = [ (int) apply_filters( 'claudia_spain_banner_image_id', 28046 ) ];
 
 	claudia_mosaic_banner( [
 		'title'   => 'Viajar por ' . $first->name,
@@ -88,6 +80,7 @@ if ( $top ) {
 		'url'     => claudia_destination_link( $first ),
 		'cta'     => 'Todas las guías de ' . $first->name,
 		'images'  => $images,
+		'class'   => 'mosaic-banner--single',
 		'links'   => array_map( fn( $p ) => [ 'label' => $p['term']->name, 'url' => claudia_destination_link( $p['term'] ), 'count' => $p['count'] ], $provinces ),
 	] );
 }

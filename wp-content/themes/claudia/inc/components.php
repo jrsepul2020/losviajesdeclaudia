@@ -132,9 +132,9 @@ function claudia_destination_panels( array $items ): void {
  * @param array $args title, eyebrow, text, url, cta, images (IDs), links ([label, url, count]).
  */
 function claudia_mosaic_banner( array $args ): void {
-	$a = wp_parse_args( $args, [ 'title' => '', 'eyebrow' => '', 'text' => '', 'url' => '', 'cta' => 'Descubrir', 'images' => [], 'links' => [] ] );
+	$a = wp_parse_args( $args, [ 'title' => '', 'eyebrow' => '', 'text' => '', 'url' => '', 'cta' => 'Descubrir', 'images' => [], 'links' => [], 'class' => '' ] );
 	?>
-	<section class="mosaic-banner">
+	<section class="mosaic-banner <?php echo esc_attr( $a['class'] ); ?>">
 		<div class="mosaic-banner__images" aria-hidden="true">
 			<?php
 			foreach ( array_slice( array_filter( $a['images'] ), 0, 3 ) as $i => $image_id ) {

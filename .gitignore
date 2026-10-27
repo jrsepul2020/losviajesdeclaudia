@@ -1,0 +1,18 @@
+# Este repositorio guarda solo el trabajo del rediseño, no la instalación de WordPress.
+# Se ignora todo y se permiten explícitamente: el tema, la migración y la documentación.
+/*
+!/.gitignore
+!/README.md
+!/PLAN-REDISENO.md
+!/ads.txt
+!/migracion/
+!/wp-content/
+/wp-content/*
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/claudia/
+
+# Nunca: configuración con credenciales, copias de base de datos ni archivos del sistema
+wp-config.php
+*.sql.gz
+.DS_Store

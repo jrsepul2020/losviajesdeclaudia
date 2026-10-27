@@ -1,0 +1,12 @@
+/*
+Theme Name: Claudia
+Theme URI: https://losviajesdeclaudia.com
+Description: Tema ligero a medida para Los Viajes de Claudia. Sin constructores ni dependencias: CSS en línea, sin jQuery y fuentes propias.
+Author: Los Viajes de Claudia
+Version: 0.1.0
+Requires at least: 6.4
+Requires PHP: 8.1
+Text Domain: claudia
+*/
+
+/* Los estilos reales viven en assets/css/main.css y se insertan en línea desde functions.php. */

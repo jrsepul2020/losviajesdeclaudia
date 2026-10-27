@@ -125,6 +125,49 @@ function claudia_destination_panels( array $items ): void {
 }
 
 /**
+ * Banner mosaico a sangre: tres fotos en columnas (cada una ocupa un tercio, así fotos de 800 px
+ * se ven nítidas), parte baja oscurecida, título blanco, botón principal y accesos rápidos.
+ * En móvil solo se muestra la primera foto.
+ *
+ * @param array $args title, eyebrow, text, url, cta, images (IDs), links ([label, url, count]).
+ */
+function claudia_mosaic_banner( array $args ): void {
+	$a = wp_parse_args( $args, [ 'title' => '', 'eyebrow' => '', 'text' => '', 'url' => '', 'cta' => 'Descubrir', 'images' => [], 'links' => [] ] );
+	?>
+	<section class="mosaic-banner">
+		<div class="mosaic-banner__images" aria-hidden="true">
+			<?php
+			foreach ( array_slice( array_filter( $a['images'] ), 0, 3 ) as $i => $image_id ) {
+				echo claudia_with_max_srcset( 1200, fn() => wp_get_attachment_image( $image_id, 'full', false, [
+					'sizes'    => '(min-width: 900px) 34vw, 100vw',
+					'loading'  => 'lazy',
+					'decoding' => 'async',
+					'alt'      => '',
+					'class'    => 0 === $i ? 'is-first' : '',
+				] ) );
+			}
+			?>
+		</div>
+		<div class="mosaic-banner__body">
+			<?php if ( $a['eyebrow'] ) : ?><p class="banner__eyebrow"><?php echo esc_html( $a['eyebrow'] ); ?></p><?php endif; ?>
+			<h2 class="banner__title"><?php echo esc_html( $a['title'] ); ?></h2>
+			<?php if ( $a['text'] ) : ?><p class="banner__text"><?php echo esc_html( $a['text'] ); ?></p><?php endif; ?>
+			<?php if ( $a['links'] ) : ?>
+				<ul class="mosaic-banner__links">
+					<?php foreach ( $a['links'] as $link ) : ?>
+						<li><a class="ghost-pill" href="<?php echo esc_url( $link['url'] ); ?>"><?php echo esc_html( $link['label'] ); ?><?php echo ! empty( $link['count'] ) ? ' <span>' . (int) $link['count'] . '</span>' : ''; ?></a></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php endif; ?>
+			<?php if ( $a['url'] ) : ?>
+				<a class="mosaic-banner__cta" href="<?php echo esc_url( $a['url'] ); ?>"><?php echo esc_html( $a['cta'] ); ?> <?php echo claudia_icon( 'arrow' ); ?></a>
+			<?php endif; ?>
+		</div>
+	</section>
+	<?php
+}
+
+/**
  * Banner con foto, parte baja oscurecida y texto blanco centrado.
  *
  * @param array $args title, url, image_id, eyebrow, text, cta, variant (full|half), position (object-position).

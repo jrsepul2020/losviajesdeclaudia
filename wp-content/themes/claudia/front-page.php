@@ -34,20 +34,6 @@ $total    = (int) wp_count_posts( 'post' )->publish;
 	</div>
 </section>
 
-<section id="planifica" class="section section--tight-top">
-	<div class="wrap">
-		<header class="section__head">
-			<div>
-				<p class="eyebrow">Planifica tu viaje</p>
-				<h2 class="section__title">Lo que uso antes de salir</h2>
-			</div>
-		</header>
-		<div class="aff-grid aff-grid--flat">
-			<?php foreach ( claudia_affiliates() as $a ) { claudia_affiliate_card( $a ); } ?>
-		</div>
-	</div>
-</section>
-
 <?php
 $season_q = new WP_Query( [
 	's'                   => $seasonal['search'],
@@ -75,13 +61,34 @@ if ( $season_q->have_posts() ) {
 
 if ( $top ) {
 	[ 'term' => $first, 'total' => $first_total ] = $top[0];
-	claudia_banner( [
-		'title'    => 'Viajar por ' . $first->name,
-		'eyebrow'  => sprintf( '%d guías escritas sobre el terreno', $first_total ),
-		'text'     => 'Rutas, pueblos, playas y dónde comer, provincia a provincia.',
-		'url'      => claudia_destination_link( $first ),
-		'image_id' => claudia_destination_image_id( $first ),
-		'cta'      => 'Descubrir ' . $first->name,
+
+	// Provincias (subcategorías) del destino con más guías: dan las fotos del mosaico y los accesos rápidos.
+	$provinces = [];
+	foreach ( get_terms( [ 'taxonomy' => 'category', 'parent' => $first->term_id, 'hide_empty' => false ] ) as $child ) {
+		$provinces[] = [ 'term' => $child, 'count' => claudia_hub_count( $child ) ];
+	}
+	usort( $provinces, fn( $x, $y ) => $y['count'] <=> $x['count'] );
+	$provinces = array_slice( $provinces, 0, 8 );
+
+	$images = [];
+	foreach ( $provinces as $p ) {
+		$img = claudia_destination_image_id( $p['term'] );
+		if ( $img && ! in_array( $img, $images, true ) ) {
+			$images[] = $img;
+		}
+		if ( count( $images ) === 3 ) {
+			break;
+		}
+	}
+
+	claudia_mosaic_banner( [
+		'title'   => 'Viajar por ' . $first->name,
+		'eyebrow' => sprintf( '%d guías escritas sobre el terreno', $first_total ),
+		'text'    => 'Rutas, pueblos, playas y dónde comer, provincia a provincia.',
+		'url'     => claudia_destination_link( $first ),
+		'cta'     => 'Todas las guías de ' . $first->name,
+		'images'  => $images,
+		'links'   => array_map( fn( $p ) => [ 'label' => $p['term']->name, 'url' => claudia_destination_link( $p['term'] ), 'count' => $p['count'] ], $provinces ),
 	] );
 }
 
@@ -146,7 +153,7 @@ $used_images = [];
 	</div>
 </section>
 
-<section class="section section--sand">
+<section id="ultimos" class="section section--sand">
 	<div class="wrap">
 		<header class="section__head">
 			<h2 class="section__title">Últimos artículos</h2>
@@ -160,6 +167,20 @@ $used_images = [];
 			}
 			wp_reset_postdata();
 			?>
+		</div>
+	</div>
+</section>
+
+<section id="planifica" class="section planifica">
+	<div class="wrap">
+		<header class="section__head">
+			<div>
+				<p class="eyebrow">Planifica tu viaje</p>
+				<h2 class="section__title">Lo que uso antes de salir</h2>
+			</div>
+		</header>
+		<div class="aff-grid aff-grid--flat">
+			<?php foreach ( claudia_affiliates() as $a ) { claudia_affiliate_card( $a ); } ?>
 		</div>
 	</div>
 </section>
@@ -223,30 +244,35 @@ foreach ( $continents as $c ) {
 	</div>
 </section>
 
-<?php $contact_email = claudia_contact_email(); ?>
-<section class="contact-split" aria-labelledby="contact-title">
+<?php
+$follow = [
+	'instagram' => [ 'Instagram', 'El día a día de cada viaje' ],
+	'youtube'   => [ 'YouTube', 'Vídeos de mis rutas' ],
+	'facebook'  => [ 'Facebook', 'Novedades del blog' ],
+	'x'         => [ 'X', 'Avisos y artículos nuevos' ],
+];
+?>
+<section class="contact-split" aria-labelledby="follow-title">
 	<div class="contact-split__media">
 		<?php echo wp_get_attachment_image( (int) apply_filters( 'claudia_contact_image_id', 29138 ), 'large', false, [ 'sizes' => '(min-width: 900px) 50vw, 100vw', 'loading' => 'lazy', 'decoding' => 'async', 'alt' => 'Claudia mirando con prismáticos desde una barca' ] ); ?>
 	</div>
 	<div class="contact-split__panel">
 		<div class="contact-split__inner">
 			<span class="contact-split__icon"><?php echo claudia_icon( 'send' ); ?></span>
-			<h2 id="contact-title" class="contact-split__title">Hagamos de tu próximo viaje un recuerdo</h2>
-			<p class="contact-split__text">¿Tienes dudas para organizar tu ruta, elegir alojamiento o cuadrar el presupuesto? Escríbeme y te ayudo con lo que he aprendido en cada viaje.</p>
+			<h2 id="follow-title" class="contact-split__title">Viaja conmigo, guía a guía</h2>
+			<p class="contact-split__text">Comparto rutas, pueblos y consejos de cada viaje. Léelos en el blog o sígueme en redes para no perderte el próximo destino.</p>
 			<div class="contact-split__actions">
-				<a class="button button--light" href="<?php echo esc_url( claudia_page_url( 'contacto-los-viajes-de-claudia-campos' ) ); ?>">Escríbeme <?php echo claudia_icon( 'arrow' ); ?></a>
+				<a class="button button--light" href="#ultimos">Leer las últimas guías <?php echo claudia_icon( 'arrow' ); ?></a>
 			</div>
-			<ul class="contact-split__items">
-				<?php if ( $contact_email ) : ?>
+			<ul class="contact-split__items contact-split__items--social">
+				<?php foreach ( $follow as $net => [ $name, $desc ] ) : ?>
 					<li>
-						<span class="contact-split__badge"><?php echo claudia_icon( 'mail' ); ?></span>
-						<span><strong>Email</strong><?php // antispambot() devuelve entidades HTML y el correo ya pasó por sanitize_email(): no se vuelve a escapar. ?><a href="mailto:<?php echo antispambot( $contact_email ); ?>"><?php echo antispambot( $contact_email ); ?></a></span>
+						<a class="contact-split__follow" href="<?php echo esc_url( claudia_socials()[ $net ] ); ?>" rel="noopener" target="_blank">
+							<span class="contact-split__badge"><?php echo claudia_icon( $net ); ?></span>
+							<span><strong><?php echo esc_html( $name ); ?></strong><span><?php echo esc_html( $desc ); ?></span></span>
+						</a>
 					</li>
-				<?php endif; ?>
-				<li>
-					<span class="contact-split__badge"><?php echo claudia_icon( 'instagram' ); ?></span>
-					<span><strong>Instagram</strong><a href="<?php echo esc_url( claudia_socials()['instagram'] ); ?>" rel="noopener" target="_blank">@lvdclaudia</a></span>
-				</li>
+				<?php endforeach; ?>
 			</ul>
 		</div>
 	</div>

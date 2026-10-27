@@ -532,3 +532,34 @@ summary::-webkit-details-marker { display: none; }
 	.aff-grid > .aff-card { flex: 0 0 84vw; scroll-snap-align: start; }
 }
 @media (min-width: 1100px) { .entry-sidebar .aff-card__desc, .entry-sidebar .aff-card__domain { display: none; } .entry-sidebar .aff-card { padding: 18px; gap: 8px; } }
+
+/* ---------- Banner mosaico (España): tres fotos nítidas y accesos a provincias ---------- */
+.mosaic-banner { position: relative; display: flex; align-items: flex-end; justify-content: center; min-height: clamp(560px, 86svh, 760px); margin-top: clamp(36px, 6vw, 80px); overflow: hidden; color: var(--white); isolation: isolate; background: #2b2b2b; }
+.mosaic-banner__images { position: absolute; inset: 0; display: grid; z-index: -2; }
+.mosaic-banner__images img { width: 100%; height: 100%; object-fit: cover; }
+.mosaic-banner__images img:not(.is-first) { display: none; }
+.mosaic-banner::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.25) 40%, rgba(0,0,0,.72) 68%, rgba(0,0,0,.9) 100%); }
+@media (min-width: 900px) {
+	.mosaic-banner__images { grid-template-columns: repeat(3, 1fr); gap: 3px; background: #111; }
+	.mosaic-banner__images img:not(.is-first) { display: block; }
+}
+.mosaic-banner__body { display: flex; flex-direction: column; align-items: center; gap: 10px; max-width: 900px; padding: 0 20px clamp(36px, 6vw, 72px); text-align: center; }
+.mosaic-banner__body .banner__eyebrow, .mosaic-banner__body .banner__text { margin: 0; }
+.mosaic-banner__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; list-style: none; margin: 10px 0 4px; padding: 0; }
+.ghost-pill { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: 1.5px solid rgba(255,255,255,.8); border-radius: 999px; background: rgba(255,255,255,.06); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); color: var(--white); font-size: .9rem; font-weight: 600; text-decoration: none; transition: background .2s, color .2s; }
+.ghost-pill span { font-size: .75rem; font-weight: 700; opacity: .75; }
+.ghost-pill:hover { background: var(--white); color: var(--ink); }
+.mosaic-banner__cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 6px; padding-bottom: 3px; border-bottom: 1.5px solid currentColor; color: var(--white); font-size: .85rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; }
+.mosaic-banner__cta:hover { color: var(--orange); }
+.mosaic-banner__cta .icon { width: 18px; }
+
+/* ---------- Bloque «Viaja conmigo»: redes ---------- */
+.contact-split__items--social { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
+@media (min-width: 560px) { .contact-split__items--social { grid-template-columns: 1fr 1fr; } }
+.contact-split__follow { display: flex; align-items: center; gap: 14px; color: var(--white); text-decoration: none; }
+.contact-split__follow strong { display: block; color: var(--white); font-size: 1.05rem; }
+.contact-split__follow span span { display: block; font-size: .85rem; color: rgba(255,255,255,.75); }
+.contact-split__follow:hover strong { color: var(--orange); }
+.contact-split__badge .icon { width: 22px; height: 22px; }
+.planifica { padding-block: clamp(48px, 6vw, 88px); }
+@media (max-width: 899px) { .mosaic-banner__images img.is-first { object-position: 78% 30%; } }

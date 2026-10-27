@@ -260,17 +260,6 @@ function claudia_affiliate_card( array $a ): void {
 	<?php
 }
 
-/**
- * Correo de contacto: el primer mailto: de la página de contacto (así siempre coincide con el que publica Claudia).
- */
-function claudia_contact_email(): string {
-	$page = get_page_by_path( 'contacto-los-viajes-de-claudia-campos' );
-	if ( $page && preg_match( '/mailto:([^"\'?\s>]+)/i', $page->post_content, $m ) ) {
-		return sanitize_email( $m[1] );
-	}
-	return '';
-}
-
 function claudia_socials(): array {
 	return [
 		'instagram' => 'https://www.instagram.com/lvdclaudia/',

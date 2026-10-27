@@ -210,33 +210,6 @@ foreach ( $continents as $c ) {
 	<?php claudia_destination_panels( $panels ); ?>
 </section>
 
-<section class="section">
-	<div class="wrap banner-pair">
-		<?php
-		claudia_banner( [
-			'title'    => 'Encantada, soy Claudia',
-			'eyebrow'  => 'Sobre mí',
-			'text'     => 'Sevillana, viajera desde que tenía unos días y enamorada de Irlanda.',
-			'url'      => claudia_page_url( 'sobre-mi' ),
-			'image_id' => $about_id,
-			'cta'      => 'Conóceme',
-			'variant'  => 'half',
-			'position' => '55% center',
-		] );
-		claudia_banner( [
-			'title'    => 'Sígueme en Instagram',
-			'eyebrow'  => '@lvdclaudia',
-			'text'     => 'El día a día de cada viaje, en directo y sin filtros.',
-			'url'      => claudia_socials()['instagram'],
-			'image_id' => (int) apply_filters( 'claudia_instagram_banner_id', 32787 ),
-			'cta'      => 'Ver Instagram',
-			'variant'  => 'half',
-			'position' => 'center 30%',
-		] );
-		?>
-	</div>
-</section>
-
 <?php
 $follow = [
 	'instagram' => [ 'Instagram', 'El día a día de cada viaje' ],
@@ -271,16 +244,41 @@ $follow = [
 	</div>
 </section>
 
-<section class="section section--tight-top">
-	<div class="wrap home-intro">
-		<h2 class="section__title">Un blog de viajes para organizarlo todo por tu cuenta</h2>
+<section class="home-trio" aria-labelledby="home-intro-title">
+	<?php
+	claudia_banner( [
+		'title'    => 'Encantada, soy Claudia',
+		'eyebrow'  => 'Sobre mí',
+		'text'     => 'Sevillana, viajera desde que tenía unos días y enamorada de Irlanda.',
+		'url'      => claudia_page_url( 'sobre-mi' ),
+		'image_id' => $about_id,
+		'cta'      => 'Conóceme',
+		'variant'  => 'half',
+		'position' => '55% center',
+	] );
+	?>
+	<div class="home-trio__intro">
+		<p class="eyebrow">Los Viajes de Claudia</p>
+		<h2 id="home-intro-title" class="home-trio__title">Un blog de viajes para organizarlo todo por tu cuenta</h2>
 		<p>En Los Viajes de Claudia encontrarás <?php echo esc_html( number_format_i18n( $total ) ); ?> guías escritas a partir de mis propios viajes: qué ver en cada destino, rutas día a día, dónde dormir y comer, presupuestos y los consejos que me habría gustado conocer antes de salir.</p>
-		<ul class="continents continents--left">
+		<ul class="continents">
 			<?php foreach ( claudia_menu_destinations() as $c ) : ?>
 				<li><a class="pill" href="<?php echo esc_url( $c['url'] ); ?>"><?php echo esc_html( $c['label'] ); ?></a></li>
 			<?php endforeach; ?>
 		</ul>
 	</div>
+	<?php
+	claudia_banner( [
+		'title'    => 'Sígueme en Instagram',
+		'eyebrow'  => '@lvdclaudia',
+		'text'     => 'El día a día de cada viaje, en directo y sin filtros.',
+		'url'      => claudia_socials()['instagram'],
+		'image_id' => (int) apply_filters( 'claudia_instagram_banner_id', 32787 ),
+		'cta'      => 'Ver Instagram',
+		'variant'  => 'half',
+		'position' => 'center 30%',
+	] );
+	?>
 </section>
 
 <?php

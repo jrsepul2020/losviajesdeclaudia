@@ -116,7 +116,7 @@ function claudia_destination_panels( array $items ): void {
 				<span class="panel__body">
 					<h3 class="panel__title"><?php echo esc_html( $item['title'] ); ?></h3>
 					<?php if ( ! empty( $item['text'] ) ) : ?><span class="panel__text"><?php echo esc_html( $item['text'] ); ?></span><?php endif; ?>
-					<span class="panel__arrow"><?php echo claudia_icon( 'arrow' ); ?><span class="screen-reader-text">Ver <?php echo esc_html( $item['title'] ); ?></span></span>
+					<span class="panel__cta">Ver destinos <?php echo claudia_icon( 'arrow' ); ?><span class="screen-reader-text"> de <?php echo esc_html( $item['title'] ); ?></span></span>
 				</span>
 			</a>
 		<?php endforeach; ?>

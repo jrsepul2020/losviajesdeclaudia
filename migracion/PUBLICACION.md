@@ -41,7 +41,19 @@ Es la misma secuencia que se ha probado en local (`claudiaold.local` → `claudi
 9. **Enlace de Tailandia.** Corregir a mano el enlace interno que pasa por una redirección de WordPress:
    `wp search-replace '/viajar-a-tailandia-por-libre/' '/tailandia/viajar-a-tailandia-por-libre/' wp_posts --include-columns=post_content`
 10. **Archivos de la raíz.** Comprobar que `ads.txt` sigue en la raíz con `google.com, pub-1305382296668483, DIRECT, f08c47fec0942fa0`.
-11. **Últimos ajustes.** `wp rewrite flush` y `wp cache flush`.
+11. **Optimizar las imágenes**, de unos 5,7 GB a unos 1,4 GB (probado en local el 28/10/2026):
+    1. **Copia completa** de `wp-content/uploads` y de la base de datos **fuera del servidor** (disco externo o nube). No se sube.
+    2. **Simulación**, que no borra nada: `wp eval-file herramientas/limpiar-tamanos.php jpg`
+    3. **Aplicar**: `wp eval-file herramientas/limpiar-tamanos.php aplicar jpg`
+       - Borra los tamaños del tema anterior (`penci-*`, Instagram, Elementor, Enlazatom): unos 3,6 GB.
+       - Borra los JPG/PNG redimensionados que ya tienen `.webp`: unos 0,6 GB.
+       - Conserva los originales JPG (los usan Yoast para compartir y Google Imágenes), los tamaños de WordPress con su `.webp` y todo archivo citado en el contenido.
+    4. **ALT vacíos**: `wp eval-file herramientas/rellenar-alt.php aplicar alt-aplicados.csv`. Solo rellena los vacíos, con la leyenda, la biblioteca o el título de la imagen.
+    5. **Comprobar**:
+       - Ninguna imagen del HTML da error (en local: 17.376 de 17.376 correctas).
+       - Las direcciones antiguas redirigen. El tema incluye una red de seguridad: una imagen que ya no existe se redirige (301) a su `.webp` o al original.
+       - En SiteGround, comprobar que las imágenes inexistentes llegan a WordPress; con las reglas estándar del `.htaccess` lo hacen.
+12. **Últimos ajustes.** `wp rewrite flush` y `wp cache flush`.
 
 ## 3. Comprobaciones en staging (todas obligatorias)
 

@@ -48,6 +48,39 @@ add_filter( 'wp_content_img_tag', function ( string $img ): string {
 }, 20 );
 
 /**
+ * Red de seguridad para imágenes antiguas que ya no están en disco (tamaños del tema anterior o JPG
+ * redimensionados de los que solo queda la .webp). En vez de un 404, redirige (301) a la versión que sí
+ * existe, para no perder enlaces externos ni visitas de Google Imágenes:
+ *   foto-585x390.jpg  →  foto-585x390.jpg.webp  (si existe)
+ *   foto-585x390.jpg  →  foto.jpg.webp / foto.jpg (el original)
+ * Solo actúa cuando el servidor pasa a WordPress una petición de imagen inexistente (Apache con las reglas
+ * estándar de WordPress y nginx con error_page 404 hacia index.php lo hacen).
+ */
+add_action( 'template_redirect', function () {
+	if ( ! is_404() ) {
+		return;
+	}
+	$path = (string) wp_parse_url( $_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH );
+	if ( ! preg_match( '#/wp-content/uploads/(.+\.(?:jpe?g|png|gif))$#i', rawurldecode( $path ), $m ) || str_contains( $m[1], '..' ) ) {
+		return;
+	}
+	$uploads = wp_get_upload_dir();
+	$rel     = $m[1];
+	$candidates = [ $rel . '.webp' ];
+	if ( preg_match( '/^(.+)-\d+x\d+\.(jpe?g|png|gif)$/i', $rel, $o ) ) {
+		foreach ( [ $o[1] . '.' . $o[2], $o[1] . '-scaled.' . $o[2] ] as $original ) {
+			array_push( $candidates, $original . '.webp', $original );
+		}
+	}
+	foreach ( $candidates as $candidate ) {
+		if ( is_file( $uploads['basedir'] . '/' . $candidate ) ) {
+			wp_redirect( $uploads['baseurl'] . '/' . str_replace( '%2F', '/', rawurlencode( $candidate ) ), 301, 'Claudia' );
+			exit;
+		}
+	}
+}, 0 );
+
+/**
  * Ejecuta $render con el srcset limitado a $max píxeles de ancho (para tarjetas y miniaturas).
  */
 function claudia_with_max_srcset( int $max, callable $render ) {
